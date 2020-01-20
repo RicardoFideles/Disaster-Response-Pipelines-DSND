@@ -16,6 +16,7 @@ import nltk
 nltk.download(['punkt', 'wordnet', 'averaged_perceptron_tagger', 'stopwords'])
 from nltk.corpus import stopwords
 from sklearn.metrics import classification_report, confusion_matrix
+import pickle
 
 
 def load_data(database_filepath):
