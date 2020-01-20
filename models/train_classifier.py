@@ -19,6 +19,16 @@ from sklearn.metrics import classification_report, confusion_matrix
 
 
 def load_data(database_filepath):
+    """
+    Load a sqlliteDB from a path.
+    --
+    Inputs:
+        database_filepath: Database path
+    Outputs:
+        X: dataframe with target feature
+        Y: dataframe with other features
+        category_names: List of of features except the target and not used features.
+    """
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql_table('Tweets',engine)
     X = df.iloc[:,1]
@@ -28,6 +38,14 @@ def load_data(database_filepath):
     return X, Y, category_names
 
 def tokenize(text):
+    """
+    Clean, tokenize, stemmed e lemmed a text.
+    --
+    Inputs:
+        text: text
+    Outputs:
+        text : array of words.
+    """
     text = text.lower()
     
     #removing extra characters
@@ -49,6 +67,12 @@ def tokenize(text):
 
 
 def build_model():
+    """
+    Build the model and pipelines for the classifier
+    --
+    Outputs:
+        cv : GridSearchCV Object
+    """
     pipeline = Pipeline([
         ('cvect', CountVectorizer(tokenizer = tokenize)),
         ('tfidf', TfidfTransformer()),
@@ -66,12 +90,29 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    for i, col in enumerate(y_test):
+    """
+    Evalute a given model for all features using the classification_report
+    --
+    Inputs:
+        model : Model to be saved.
+        X_test :  X_test,
+        Y_test :  Y_test,
+        category_names : List of features.
+    """
+    Y_pred =  model.predict(X_test)
+    for i, col in enumerate(category_names):
         print(col)
-        print(classification_report(y_test[col],y_pred[:, i]))
+        print(classification_report(Y_test[col],Y_pred[:, i]))
 
 
 def save_model(model, model_filepath):
+    """
+    Save the model
+    --
+    Inputs:
+        model : Model to be saved.
+        model_filepath :  File path
+    """
     pickle.dump(model, open(model_filepath, 'wb'))
 
 
