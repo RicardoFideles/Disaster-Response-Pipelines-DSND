@@ -42,6 +42,16 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+
+    natural_disasters_counts = df.filter(items=['floods', 'storm', 'fire', 'earthquake', 'cold']).columns
+    natural_disasters_names = df.filter(items=['floods', 'storm', 'fire', 'earthquake', 'cold']).sum()/df.shape[0]
+
+
+    
+
+
+    categories = df[df.columns[4:]].columns
+    messages_per_category = df[df.columns[4:]].sum()/df.shape[0]
     
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
@@ -61,6 +71,44 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+         {
+            'data': [
+                Bar(
+                    x=natural_disasters_counts,
+                    y=natural_disasters_names
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Messages for Natural Disasters',
+                'yaxis': {
+                    'title': "Proportion"
+                },
+                'xaxis': {
+                    'title': "Type of Natural Disasters"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=categories,
+                    y=messages_per_category
+                )
+            ],
+
+            'layout': {
+                'title': 'Messages per Category',
+                'yaxis': {
+                    'title': "Proportion",
+                    'automargin':True
+                },
+                'xaxis': {
+                    'title': "Category",
+                    'automargin':True
                 }
             }
         }
